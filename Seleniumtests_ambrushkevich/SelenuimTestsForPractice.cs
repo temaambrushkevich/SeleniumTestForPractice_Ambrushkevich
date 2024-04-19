@@ -4,7 +4,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
 
-namespace Selenuimtests_Ambrushkevich;
+namespace Selenuimtests_ambrushkevich;
 
 public class SelenuimTestsForPractice
 {
