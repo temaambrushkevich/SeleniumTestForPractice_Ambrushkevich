@@ -99,3 +99,5 @@ D:\Kontur\Seleniumtests_ambrushkevich\Seleniumtests_ambrushkevich\obj\Debug\net8
 D:\Kontur\Seleniumtests_ambrushkevich\Seleniumtests_ambrushkevich\obj\Debug\net8.0\Seleniumtests_ambrushkevich.pdb
 D:\Kontur\Seleniumtests_ambrushkevich\Seleniumtests_ambrushkevich\obj\Debug\net8.0\Seleniumtests_ambrushkevich.genruntimeconfig.cache
 D:\Kontur\Seleniumtests_ambrushkevich\Seleniumtests_ambrushkevich\obj\Debug\net8.0\ref\Seleniumtests_ambrushkevich.dll
+D:\Kontur\Seleniumtests_ambrushkevich\Seleniumtests_ambrushkevich\bin\Debug\net8.0\SeleniumExtras.WaitHelpers.dll
+D:\Kontur\Seleniumtests_ambrushkevich\Seleniumtests_ambrushkevich\obj\Debug\net8.0\Seleniumtests_ambrushkevich.sourcelink.json

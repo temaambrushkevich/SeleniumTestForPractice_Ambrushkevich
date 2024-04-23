@@ -1,25 +1,63 @@
 ﻿using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 
 
-namespace Selenuimtests_ambrushkevich;
+namespace Selenuimtests_Ambrushkevich;
 
 public class SelenuimTestsForPractice
 {
-    public ChromeDriver driver;
+    public ChromeDriver Driver;
+    public WebDriverWait Wait;
     public const string FolderName = "Folder223565";
 
+    public void Authorization()
+    {
+        Driver.Navigate().GoToUrl("https://staff-testing.testkontur.ru/");
+        
+        // ввод логина и пароля
+        var login = Driver.FindElement(By.Id("Username"));
+        var password = Driver.FindElement(By.Id("Password"));
+        login.SendKeys("ambrushkevichaa@gmail.com");
+        password.SendKeys("{d#AF<M184ad58m*");
+        
+        // нажатие на кнопку войти
+        var enter = Driver.FindElement(By.ClassName("form-button"));
+        enter.Click();
+        
+        // ждем, пока в url появится .../news
+        Wait.Until(ExpectedConditions.UrlToBe("https://staff-testing.testkontur.ru/news"));
+        
+        // ждем, пока станет видимым логотип контур-стафа
+        Wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[alt='Логотип']")));
+    }
+    
+    public void OpenFilesPage()
+    {
+        Driver.Navigate().GoToUrl("https://staff-testing.testkontur.ru/files");
+        // ждем, пока в url появится .../files
+        Wait.Until(ExpectedConditions.UrlToBe("https://staff-testing.testkontur.ru/files"));
+        
+        // ждем заголовок на странице
+        Wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[title='Файлы']")));
+    }
+    
     [SetUp]
     public void SetUp()
     {
         var options = new ChromeOptions();
         options.AddArguments("--no-sandbox", "--start-maximized", "--disable-extensions");
+        Driver = new ChromeDriver(options);
         
-        driver = new ChromeDriver(options);
         // НЕЯВНЫЕ ОЖИДАНИЯ
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+        Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+        
+        // ЯВНЫЕ ОЖИДАНИЯ
+        Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(5));
         
         Authorization();
     }
@@ -27,25 +65,15 @@ public class SelenuimTestsForPractice
     [TearDown]
     public void TearDown()
     {
-        driver.Close();
-        driver.Quit();
+        Driver.Close();
+        Driver.Quit();
     }
     
-    public void Authorization()
+    [Test]
+    public void AuthorizationTest()
     {
-        driver.Navigate().GoToUrl("https://staff-testing.testkontur.ru/");
-        
-        // ВВОД ЛОГИНА И ПАРОЛЯ
-        var login = driver.FindElement(By.Id("Username"));
-        login.SendKeys("ambrushkevichaa@gmail.com");
-        var password = driver.FindElement(By.Id("Password"));
-        password.SendKeys("{d#AF<M184ad58m*");
-        
-        // НАЖАТИЕ НА КНОПКУ ВОЙТИ
-        var enter = driver.FindElement(By.ClassName("form-button"));
-        enter.Click();
-
-        var pageTitle = driver.FindElement((By.CssSelector("[data-tid='Title']")));
+        // проверка заголовка
+        var pageTitle = Driver.FindElement((By.CssSelector("[data-tid='Title']")));
         pageTitle.Text.Should().Be("Новости");
     }
     
@@ -53,73 +81,81 @@ public class SelenuimTestsForPractice
     public void BtnCommunityTest()
     {
         // переходим в сообщества
-        var community = driver.FindElements(By.CssSelector("[data-tid='Community']"))
+        var community = Driver.FindElements(By.CssSelector("[data-tid='Community']"))
             .First(element => element.Displayed);
         community.Click();
         
         // проверяем, что на странице есть заголовок "Сообщества" + правильный url
-        var communityTitle = driver.FindElement(By.CssSelector("[data-tid='Title']"));
-        communityTitle.Text.Should().Be("Сообщества");
-        var url = driver.Url;
-        url.Should().Be("https://staff-testing.testkontur.ru/communities");
+        var communityTitle = Driver.FindElement(By.CssSelector("[data-tid='Title']"));
+        var url = Driver.Url;
+        
+        using (new AssertionScope())
+        {
+            communityTitle.Text.Should().Be("Сообщества");
+            url.Should().Be("https://staff-testing.testkontur.ru/communities");
+        }
     }
 
     [Test]
     public void BtnSecurityTest()
     {
         // клик по иконке профиля
-        var dropdownButton = driver.FindElement(By.CssSelector("[data-tid='DropdownButton']"));
+        var dropdownButton = Driver.FindElement(By.CssSelector("[data-tid='DropdownButton']"));
         dropdownButton.Click();
         // клик по кнопке "Безопасность"
-        var securityButton = driver.FindElement(By.CssSelector("[data-tid='Security'"));
+        var securityButton = Driver.FindElement(By.CssSelector("[data-tid='Security'"));
         securityButton.Click();
         
         // проверки: есть заголовок "Безопасность" + правильный url
-        var securityTitle = driver.FindElement(By.CssSelector("[data-tid='Title']"));
-        securityTitle.Text.Should().Be("Безопасность");
-        var url = driver.Url;
-        url.Should().Be("https://staff-testing.testkontur.ru/security");
-    }
+        var securityTitle = Driver.FindElement(By.CssSelector("[data-tid='Title']"));
+        var url = Driver.Url;
 
+
+        using (new AssertionScope())
+        {
+            securityTitle.Text.Should().Be("Безопасность");
+            url.Should().Be("https://staff-testing.testkontur.ru/security");
+        }
+    }
+    
     [Test]
-    public void GoToFilesPageTest()
+    public void OpenFilesPageTest()
     {
-        driver.Navigate().GoToUrl("https://staff-testing.testkontur.ru/files");
+        OpenFilesPage();
         
-        // проверка заголовка на странице
-        var pageTitle = driver.FindElement(By.CssSelector("[title='Файлы']"));
+        // проверка заголовка
+        var pageTitle = Driver.FindElement((By.CssSelector("[data-tid='Title']")));
         pageTitle.Text.Should().Be("Файлы");
     }
     
     [Test]
     public void CreateFolderTest()
     {
-        GoToFilesPageTest();
+        OpenFilesPage();
         
         // клик по кнопке "Добавить"
-        var openActionsBtn = driver.FindElements(By.CssSelector("[data-tid='Actions']"))
+        var openActionsBtn = Driver.FindElements(By.CssSelector("[data-tid='Actions']"))
             .First(element => element.Text == "Добавить");
         openActionsBtn.Click();
         
         // клик по кнопке "Папку"
-        var addFolderButton = driver.FindElement(By.CssSelector("[data-tid='CreateFolder']"));
+        var addFolderButton = Driver.FindElement(By.CssSelector("[data-tid='CreateFolder']"));
         addFolderButton.Click();
         
-        // проверка заголовка окна
-        var windowsTitle = driver.FindElement(By.CssSelector("[data-tid='ModalPageHeader']"));
-        windowsTitle.Text.Should().Be("Создать");
+        // ждем заголовок окна
+        Wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[data-tid='ModalPageHeader']")));
 
         // ввод названия папки
-        var folderNameField = driver.FindElement(By.CssSelector("[placeholder='Новая папка']"));
+        var folderNameField = Driver.FindElement(By.CssSelector("[placeholder='Новая папка']"));
         folderNameField.SendKeys(FolderName);
         
         // нажатие на кнопку "Сохранить"
-        var saveBtn = driver.FindElement(By.CssSelector("[data-tid='SaveButton']"));
+        var saveBtn = Driver.FindElement(By.CssSelector("[data-tid='SaveButton']"));
         saveBtn.Click();
         
         // проврека, что папка с таким названием создалась
-        driver.Navigate().Refresh();
-        var folder = driver.FindElements(By.CssSelector("[data-tid='ListItemWrapper']"))
+        Driver.Navigate().Refresh();
+        var folder = Driver.FindElements(By.CssSelector("[data-tid='ListItemWrapper']"))
             .First(element => element.Text == FolderName);
         folder.Text.Should().Be(FolderName);
     }
@@ -127,10 +163,10 @@ public class SelenuimTestsForPractice
     [Test]
     public void DeleteFolderTest()
     {
-        GoToFilesPageTest();
+        OpenFilesPage();
         
         // находим папку
-        var folderLine = driver.FindElements(By.CssSelector("[data-tid='ListItemWrapper']"))
+        var folderLine = Driver.FindElements(By.CssSelector("[data-tid='ListItemWrapper']"))
             .First(element => element.Text == FolderName);
         
         // клик по трем точкам справа от папки
@@ -138,16 +174,16 @@ public class SelenuimTestsForPractice
         kebabMenu.Click();
         
         // в списке действий клик по кнопке "Удалить"
-        var deleteWindowBtn = driver.FindElement(By.CssSelector("[data-tid='DeleteFile']"));
+        var deleteWindowBtn = Driver.FindElement(By.CssSelector("[data-tid='DeleteFile']"));
         deleteWindowBtn.Click();
         
         // клик по кнопке "Удалить"
-        var delBtn = driver.FindElement(By.CssSelector("[data-tid='DeleteButton']"));
+        var delBtn = Driver.FindElement(By.CssSelector("[data-tid='DeleteButton']"));
         delBtn.Click();
         
         // проверка, что папки не осталось
-        driver.Navigate().Refresh();
-        var elements = driver.FindElements(By.CssSelector("[data-tid='ListItemWrapper']"));
+        Driver.Navigate().Refresh();
+        var elements = Driver.FindElements(By.CssSelector("[data-tid='ListItemWrapper']"));
         bool folderExists = false;
         foreach (var element in elements)
             if (element.Text == FolderName)

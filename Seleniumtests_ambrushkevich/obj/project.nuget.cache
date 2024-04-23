@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "jJjWZew5RSAxmLwn1yJm/Tp+3qsKpuaF9heYPlDKA3Ex46v5MGlSnioqa7DNiEL/bTUltTPG9J7Hs2KOE7Qakw==",
+  "dgSpecHash": "3yBhynPEMjgPr/hY9C6TpJtfOdjcwri6dGzIObXEuz6VC6cCabrTxfd/VurOKv2Ysj3ZyvdFSHRkqhcHHzvQKQ==",
   "success": true,
   "projectFilePath": "D:\\Kontur\\Seleniumtests_ambrushkevich\\Seleniumtests_ambrushkevich\\Seleniumtests_ambrushkevich.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\artem\\.nuget\\packages\\dotnetseleniumextras.waithelpers\\3.11.0\\dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
     "C:\\Users\\artem\\.nuget\\packages\\fluentassertions\\6.12.0\\fluentassertions.6.12.0.nupkg.sha512",
     "C:\\Users\\artem\\.nuget\\packages\\microsoft.codecoverage\\17.9.0\\microsoft.codecoverage.17.9.0.nupkg.sha512",
     "C:\\Users\\artem\\.nuget\\packages\\microsoft.net.test.sdk\\17.9.0\\microsoft.net.test.sdk.17.9.0.nupkg.sha512",
